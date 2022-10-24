@@ -13,6 +13,7 @@ using namespace Microsoft::WRL;
 const float Object3d::radius = 5.0f;				// 底面の半径
 const float Object3d::prizmHeight = 8.0f;			// 柱の高さ
 ID3D12Device* Object3d::device = nullptr;
+Input* Object3d::input = nullptr;
 UINT Object3d::descriptorHandleIncrementSize = 0;
 ID3D12GraphicsCommandList* Object3d::cmdList = nullptr;
 ComPtr<ID3D12RootSignature> Object3d::rootsignature;
@@ -36,11 +37,12 @@ unsigned short Object3d::indices[indexCount];
 XMMATRIX Object3d::matBillboard = XMMatrixIdentity();
 XMMATRIX Object3d::matBillboardY = XMMatrixIdentity();
 
-void Object3d::StaticInitialize(ID3D12Device* device, int window_width, int window_height)
+void Object3d::StaticInitialize(ID3D12Device* device, int window_width, int window_height, Input* input_)
 {
 	// nullptrチェック
 	assert(device);
 
+	input = input_;
 	Object3d::device = device;
 
 	// デスクリプタヒープの初期化
@@ -572,7 +574,12 @@ void Object3d::Update()
 	// ワールド行列の合成
 	matWorld = XMMatrixIdentity(); // 変形をリセット
 
-	matWorld *= matBillboardY;
+	if (input->PushKey(DIK_1)) {
+		matWorld *= matBillboard;
+	}
+	else if (input->PushKey(DIK_2)) {
+		matWorld *= matBillboardY;
+	}
 
 	matWorld *= matScale; // ワールド行列にスケーリングを反映
 	matWorld *= matRot; // ワールド行列に回転を反映

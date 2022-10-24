@@ -5,6 +5,7 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include <d3dx12.h>
+#include "Input.h"
 
 /// <summary>
 /// 3Dオブジェクト
@@ -53,7 +54,7 @@ public: // 静的メンバ関数
 	/// <param name="device">デバイス</param>
 	/// <param name="window_width">画面幅</param>
 	/// <param name="window_height">画面高さ</param>
-	static void StaticInitialize(ID3D12Device* device, int window_width, int window_height);
+	static void StaticInitialize(ID3D12Device* device, int window_width, int window_height, Input* input_);
 
 	/// <summary>
 	/// 描画前処理
@@ -103,6 +104,7 @@ public: // 静的メンバ関数
 	static void CameraMoveVector(XMFLOAT3 move);
 
 private: // 静的メンバ変数
+	static Input* input;
 	// デバイス
 	static ID3D12Device* device;
 	// デスクリプタサイズ
