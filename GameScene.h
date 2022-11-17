@@ -64,5 +64,11 @@ private: // メンバ変数
 
 	Sprite* sprite1 = nullptr;
 	Sprite* sprite2 = nullptr;
+
+	enum Mord
+	{
+		Billboard,
+	};
+	int mord = Billboard;
 };
 
