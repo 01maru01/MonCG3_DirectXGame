@@ -6,6 +6,7 @@
 #include "Sprite.h"
 #include "ParticleManager.h"
 #include "DebugText.h"
+#include "Object3d.h"
 
 /// <summary>
 /// ゲームシーン
@@ -61,6 +62,8 @@ private: // メンバ変数
 	/// </summary>
 	Sprite* spriteBG = nullptr;
 	ParticleManager* particleMan = nullptr;
+	Object3d* object3d = nullptr;
+	Object3d* billboard3d = nullptr;
 
 	Sprite* sprite1 = nullptr;
 	Sprite* sprite2 = nullptr;
@@ -68,6 +71,7 @@ private: // メンバ変数
 	enum Mord
 	{
 		Billboard,
+		ChangeScaleParticle,
 	};
 	int mord = Billboard;
 };
