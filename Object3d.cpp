@@ -131,6 +131,14 @@ void Object3d::CameraMoveVector(XMFLOAT3 move)
 	SetTarget(target_moved);
 }
 
+void Object3d::ResetCamera()
+{
+	XMFLOAT3 eye_moved = { 0, 0, -5.0f };
+	XMFLOAT3 target_moved = GetTarget();
+	SetEye(eye_moved);
+	SetTarget(target_moved);
+}
+
 void Object3d::InitializeDescriptorHeap()
 {
 	HRESULT result = S_FALSE;

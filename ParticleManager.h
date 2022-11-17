@@ -118,6 +118,7 @@ public: // 静的メンバ関数
 	/// </summary>
 	/// <param name="move">移動量</param>
 	static void CameraMoveVector(XMFLOAT3 move);
+	static void ResetCamera();
 
 private: // 静的メンバ変数
 	// デバイス

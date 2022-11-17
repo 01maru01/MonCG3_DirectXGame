@@ -112,6 +112,10 @@ void GameScene::Update()
 		if (input->PushKey(DIK_D)) { Object3d::CameraMoveVector({ +1.0f,0.0f,0.0f }); }
 		else if (input->PushKey(DIK_A)) { Object3d::CameraMoveVector({ -1.0f,0.0f,0.0f }); }
 	}
+	if (input->TriggerKey(DIK_R)) {
+		Object3d::ResetCamera();
+		ParticleManager::ResetCamera();
+	}
 
 	if (input->PushKey(DIK_SPACE)) {
 		XMFLOAT2 position = sprite1->GetPosition();
