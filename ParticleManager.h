@@ -27,12 +27,12 @@ public: // サブクラス
 	{
 		XMFLOAT3 pos; // xyz座標
 		float scale;
+		XMFLOAT4 color;	// 色 (RGBA)
 	};
 
 	// 定数バッファ用データ構造体
 	struct ConstBufferData
 	{
-		//XMFLOAT4 color;	// 色 (RGBA)
 		XMMATRIX mat;	// ３Ｄ変換行列
 		XMMATRIX matBillboard;
 	};
@@ -51,6 +51,10 @@ public: // サブクラス
 		float scale = 1.0f;
 		float s_scale = 1.0f;
 		float e_scale = 0.0f;
+
+		XMFLOAT4 color;
+		XMFLOAT4 s_color;
+		XMFLOAT4 e_color;
 	};
 
 private: // 定数
@@ -220,7 +224,7 @@ public: // メンバ関数
 	///// <param name="position">座標</param>
 	//void SetPosition(const XMFLOAT3& position) { this->position = position; }
 
-	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float s_scale, float e_scale);
+	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float s_scale, float e_scale, XMFLOAT4 s_color, XMFLOAT4 e_color);
 
 private: // メンバ変数
 	ComPtr<ID3D12Resource> constBuff; // 定数バッファ

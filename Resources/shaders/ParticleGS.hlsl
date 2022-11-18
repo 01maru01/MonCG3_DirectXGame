@@ -26,6 +26,7 @@ void main(
 	for (uint i = 0; i < vnum; i++) {
 		//float4 offset = mul(matBillboard, offset_array[i]);
 		float4 offset = offset_array[i] * input[0].scale;
+		element.color = input[0].color;
 		offset = mul(matBillboard, offset);
 		element.svpos = input[0].svpos + offset;
 		element.svpos = mul(mat, element.svpos);

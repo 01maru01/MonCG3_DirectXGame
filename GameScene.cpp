@@ -148,7 +148,18 @@ void GameScene::Update()
 			XMFLOAT3 acc{};
 			acc.y = -(float)rand() / RAND_MAX * rnd_acc;
 
-			particleMan->Add(60, pos, vel, acc, 1.0f, 0.0f);
+			XMFLOAT4 s_color{};
+			s_color.x = (float)rand() / RAND_MAX;
+			s_color.y = (float)rand() / RAND_MAX;
+			s_color.z = (float)rand() / RAND_MAX;
+			s_color.w = 1.0f;
+			XMFLOAT4 e_color{};
+			e_color.x = (float)rand() / RAND_MAX;
+			e_color.y = (float)rand() / RAND_MAX;
+			e_color.z = (float)rand() / RAND_MAX;
+			e_color.w = 0.0f;
+
+			particleMan->Add(60, pos, vel, acc, 1.0f, 0.0f, s_color, e_color);
 		}
 
 		particleMan->Update();

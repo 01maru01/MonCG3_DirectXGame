@@ -45,6 +45,36 @@ const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::X
 	return result;
 }
 
+const DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4& lhs, const DirectX::XMFLOAT4& rhs) {
+	XMFLOAT4 result;
+	result.x = lhs.x + rhs.x;
+	result.y = lhs.y + rhs.y;
+	result.z = lhs.z + rhs.z;
+	result.w = lhs.w + rhs.w;
+
+	return result;
+}
+
+const DirectX::XMFLOAT4 operator-(const DirectX::XMFLOAT4& lhs, const DirectX::XMFLOAT4& rhs) {
+	XMFLOAT4 result;
+	result.x = lhs.x - rhs.x;
+	result.y = lhs.y - rhs.y;
+	result.z = lhs.z - rhs.z;
+	result.w = lhs.w - rhs.w;
+
+	return result;
+}
+
+const DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4& lhs, const float& rhs) {
+	XMFLOAT4 result;
+	result.x = lhs.x * rhs;
+	result.y = lhs.y * rhs;
+	result.z = lhs.z * rhs;
+	result.w = lhs.w * rhs;
+
+	return result;
+}
+
 void ParticleManager::StaticInitialize(ID3D12Device* device, int window_width, int window_height)
 {
 	// nullptrチェック
@@ -275,6 +305,11 @@ void ParticleManager::InitializeGraphicsPipeline()
 		},
 		{ // xy座標(1行で書いたほうが見やすい)
 			"TEXCOORD", 0, DXGI_FORMAT_R32_FLOAT, 0,
+			D3D12_APPEND_ALIGNED_ELEMENT,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+		},
+		{ // xy座標(1行で書いたほうが見やすい)
+			"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
 			D3D12_APPEND_ALIGNED_ELEMENT,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
 		},
@@ -653,6 +688,9 @@ void ParticleManager::Update()
 
 		it->scale = (it->e_scale - it->s_scale) * f;
 		it->scale += it->s_scale;
+
+		it->color = (it->e_color - it->s_color) * f;
+		it->color = it->color + it->s_color;
 	}
 
 	particles.remove_if([](Particle& x) {return x.frame >= x.num_frame; });
@@ -663,6 +701,7 @@ void ParticleManager::Update()
 		for (std::forward_list<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
 			vertMap->pos = it->position;
 			vertMap->scale = it->scale;
+			vertMap->color = it->color;
 			vertMap++;
 		}
 		vertBuff->Unmap(0, nullptr);
@@ -702,7 +741,7 @@ void ParticleManager::Draw()
 	cmdList->DrawInstanced((UINT)std::distance(particles.begin(), particles.end()), 1, 0, 0);
 }
 
-void ParticleManager::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float s_scale, float e_scale)
+void ParticleManager::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, float s_scale, float e_scale, XMFLOAT4 s_color, XMFLOAT4 e_color)
 {
 	particles.emplace_front();
 	Particle& p = particles.front();
@@ -714,4 +753,8 @@ void ParticleManager::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOA
 	p.scale = s_scale;
 	p.s_scale = s_scale;
 	p.e_scale = e_scale;
+
+	p.color = s_color;
+	p.s_color = s_color;
+	p.e_color = e_color;
 }
