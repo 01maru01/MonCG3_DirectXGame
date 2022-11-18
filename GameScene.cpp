@@ -151,27 +151,53 @@ void GameScene::Update()
 		}
 		break;
 	case EmitterMord:
+		if (input->TriggerKey(DIK_LSHIFT)) {
+			moveFire = !moveFire;
+		}
 		// オブジェクト移動
 		if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->PushKey(DIK_RIGHT) || input->PushKey(DIK_LEFT))
 		{
-			// 現在の座標を取得
-			XMFLOAT3 position = afterEffect.GetPosition();
+			if (moveFire) {
+				// 現在の座標を取得
+				XMFLOAT3 position = fireEffect.GetPosition();
 
-			float spd = 0.5f;
-			// 移動後の座標を計算
-			if (input->PushKey(DIK_UP)) { position.y += spd; }
-			else if (input->PushKey(DIK_DOWN)) { position.y -= spd; }
-			if (input->PushKey(DIK_RIGHT)) { position.x += spd; }
-			else if (input->PushKey(DIK_LEFT)) { position.x -= spd; }
+				float spd = 0.5f;
+				// 移動後の座標を計算
+				if (input->PushKey(DIK_UP)) { position.y += spd; }
+				else if (input->PushKey(DIK_DOWN)) { position.y -= spd; }
+				if (input->PushKey(DIK_RIGHT)) { position.x += spd; }
+				else if (input->PushKey(DIK_LEFT)) { position.x -= spd; }
 
-			// 座標の変更を反映
-			afterEffect.SetPosition(position);
+				// 座標の変更を反映
+				fireEffect.SetPosition(position);
+			}
+			else {
+				// 現在の座標を取得
+				XMFLOAT3 position = afterEffect.GetPosition();
+
+				float spd = 0.5f;
+				// 移動後の座標を計算
+				if (input->PushKey(DIK_UP)) { position.y += spd; }
+				else if (input->PushKey(DIK_DOWN)) { position.y -= spd; }
+				if (input->PushKey(DIK_RIGHT)) { position.x += spd; }
+				else if (input->PushKey(DIK_LEFT)) { position.x -= spd; }
+
+				// 座標の変更を反映
+				afterEffect.SetPosition(position);
+			}
+		}
+
+		for (int i = 0; i < 5; i++)
+		{
+			afterEffect.Update();
+
+			particleMan->Add(120, afterEffect.position, afterEffect.velocity, afterEffect.accel, 0.0f, 2.0f, afterEffect.s_color, afterEffect.e_color);
 		}
 
 		for (int i = 0; i < 5; i++)
 		{
 			const float rnd_pos = 2.0f;
-			XMFLOAT3 pos = afterEffect.GetPosition();
+			XMFLOAT3 pos = fireEffect.GetPosition();
 			pos.x += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 			pos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 			pos.z += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
@@ -197,7 +223,7 @@ void GameScene::Update()
 			e_color.z = (float)rand() / RAND_MAX;
 			e_color.w = 0.0f;
 
-			particleMan->Add(120, pos, vel, acc, 1.0f, 0.0f, s_color, e_color);
+			particleMan->Add(120, pos, vel, acc, 1.0f, 0.0f, { 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,0.0f });
 		}
 		break;
 	default:

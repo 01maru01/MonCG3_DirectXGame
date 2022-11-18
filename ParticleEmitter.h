@@ -14,7 +14,9 @@ private:
 
 private:
 	int life;
-	XMFLOAT3 position = {0.0f,0.0f,50.0f};
+	XMFLOAT3 emitterPos = {0.0f,0.0f,50.0f};
+public:
+	XMFLOAT3 position = {};
 	XMFLOAT3 velocity = {};
 	XMFLOAT3 accel = {};
 	float s_scale = 1.0f;
@@ -22,8 +24,12 @@ private:
 	XMFLOAT4 s_color = { 1.0f,1.0f,1.0f,1.0f };
 	XMFLOAT4 e_color = { 1.0f,1.0f,1.0f,0.0f };
 public:
-	const XMFLOAT3& GetPosition() const { return position; }
+	void SetScale(float start = 1.0f, float end = 0.0f);
+	void SetColor(bool setRand, XMFLOAT4 start = { 1.0f,1.0f,1.0f,1.0f }, XMFLOAT4 end = { 1.0f,1.0f,1.0f,0.0f });
+	void Update();
 
-	void SetPosition(const XMFLOAT3& position) { this->position = position; }
+	const XMFLOAT3& GetPosition() const { return emitterPos; }
+
+	void SetPosition(const XMFLOAT3& position) { this->emitterPos = position; }
 };
 

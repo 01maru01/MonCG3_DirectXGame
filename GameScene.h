@@ -66,10 +66,12 @@ private: // メンバ変数
 	Object3d* object3d = nullptr;
 	Object3d* billboard3d = nullptr;
 	ParticleEmitter afterEffect;
+	ParticleEmitter fireEffect;
 
 	Sprite* sprite1 = nullptr;
 	Sprite* sprite2 = nullptr;
 
+	bool moveFire = false;
 	enum Mord
 	{
 		Billboard,
