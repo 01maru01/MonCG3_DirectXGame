@@ -52,9 +52,9 @@ public: // サブクラス
 		float s_scale = 1.0f;
 		float e_scale = 0.0f;
 
-		XMFLOAT4 color;
-		XMFLOAT4 s_color;
-		XMFLOAT4 e_color;
+		XMFLOAT4 color = {};
+		XMFLOAT4 s_color = {};
+		XMFLOAT4 e_color = {};
 	};
 
 private: // 定数

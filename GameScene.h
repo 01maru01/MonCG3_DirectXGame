@@ -7,6 +7,7 @@
 #include "ParticleManager.h"
 #include "DebugText.h"
 #include "Object3d.h"
+#include "ParticleEmitter.h"
 
 /// <summary>
 /// ゲームシーン
@@ -64,6 +65,7 @@ private: // メンバ変数
 	ParticleManager* particleMan = nullptr;
 	Object3d* object3d = nullptr;
 	Object3d* billboard3d = nullptr;
+	ParticleEmitter afterEffect;
 
 	Sprite* sprite1 = nullptr;
 	Sprite* sprite2 = nullptr;
@@ -72,6 +74,7 @@ private: // メンバ変数
 	{
 		Billboard,
 		ChangeScaleParticle,
+		EmitterMord,
 	};
 	int mord = Billboard;
 };

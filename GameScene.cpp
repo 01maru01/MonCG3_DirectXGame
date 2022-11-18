@@ -73,26 +73,14 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 void GameScene::Update()
 {
-	// オブジェクト移動
-	//if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->PushKey(DIK_RIGHT) || input->PushKey(DIK_LEFT))
-	//{
-	//	// 現在の座標を取得
-	//	XMFLOAT3 position = particleMan->GetPosition();
-
-	//	// 移動後の座標を計算
-	//	if (input->PushKey(DIK_UP)) { position.y += 1.0f; }
-	//	else if (input->PushKey(DIK_DOWN)) { position.y -= 1.0f; }
-	//	if (input->PushKey(DIK_RIGHT)) { position.x += 1.0f; }
-	//	else if (input->PushKey(DIK_LEFT)) { position.x -= 1.0f; }
-
-	//	// 座標の変更を反映
-	//	particleMan->SetPosition(position);
-	//}
 	if (input->PushKey(DIK_1)) {
 		mord = Billboard;
 	}
 	else if (input->PushKey(DIK_2)) {
 		mord = ChangeScaleParticle;
+	}
+	else if (input->PushKey(DIK_3)) {
+		mord = EmitterMord;
 	}
 
 
@@ -161,12 +149,61 @@ void GameScene::Update()
 
 			particleMan->Add(60, pos, vel, acc, 1.0f, 0.0f, s_color, e_color);
 		}
+		break;
+	case EmitterMord:
+		// オブジェクト移動
+		if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->PushKey(DIK_RIGHT) || input->PushKey(DIK_LEFT))
+		{
+			// 現在の座標を取得
+			XMFLOAT3 position = afterEffect.GetPosition();
 
-		particleMan->Update();
+			float spd = 0.5f;
+			// 移動後の座標を計算
+			if (input->PushKey(DIK_UP)) { position.y += spd; }
+			else if (input->PushKey(DIK_DOWN)) { position.y -= spd; }
+			if (input->PushKey(DIK_RIGHT)) { position.x += spd; }
+			else if (input->PushKey(DIK_LEFT)) { position.x -= spd; }
+
+			// 座標の変更を反映
+			afterEffect.SetPosition(position);
+		}
+
+		for (int i = 0; i < 5; i++)
+		{
+			const float rnd_pos = 2.0f;
+			XMFLOAT3 pos = afterEffect.GetPosition();
+			pos.x += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+			pos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+			pos.z += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+			const float rnd_vel = 0.1f;
+			XMFLOAT3 vel{};
+			vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+
+			const float rnd_acc = 0.001f;
+			XMFLOAT3 acc{};
+			acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+			XMFLOAT4 s_color{};
+			s_color.x = (float)rand() / RAND_MAX;
+			s_color.y = (float)rand() / RAND_MAX;
+			s_color.z = (float)rand() / RAND_MAX;
+			s_color.w = 1.0f;
+			XMFLOAT4 e_color{};
+			e_color.x = (float)rand() / RAND_MAX;
+			e_color.y = (float)rand() / RAND_MAX;
+			e_color.z = (float)rand() / RAND_MAX;
+			e_color.w = 0.0f;
+
+			particleMan->Add(120, pos, vel, acc, 1.0f, 0.0f, s_color, e_color);
+		}
 		break;
 	default:
 		break;
 	}
+	particleMan->Update();
 }
 
 void GameScene::Draw()
@@ -220,16 +257,8 @@ void GameScene::Draw()
 	/// </summary>
 	
 	// 3Dオブジェクト描画後処理
-	switch (mord)
-	{
-	case Billboard:
-		break;
-	case ChangeScaleParticle:
-		particleMan->Draw();
-		break;
-	default:
-		break;
-	}
+	
+	particleMan->Draw();
 
 	// 3Dオブジェクト描画後処理
 	ParticleManager::PostDraw();
