@@ -11,6 +11,7 @@ GameScene::~GameScene()
 {
 	delete spriteBG;
 	delete object3d;
+	delete floor;
 	delete billboard3d;
 	delete particleMan;
 	delete sprite1;
@@ -40,6 +41,21 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	object3d = Object3d::Create();
 	object3d->SetPosition({ 2.0f,0.0f,0.0f });
 	object3d->Update();
+	grass3d.resize(50);
+	for (int i = 0; i < grass3d.size(); i++)
+	{
+		grass3d[i] = GrassObj::Create();
+		const float rnd_width = 4.0f;
+		grass3d[i]->SetPosition({ (float)rand() / RAND_MAX * rnd_width - rnd_width / 2.0f,
+								  0.0f,
+								  (float)rand() / RAND_MAX * rnd_width - rnd_width / 2.0f });
+		grass3d[i]->Update();
+	}
+	floor = Object3d::Create();
+	floor->SetPosition({ 0.0f,0.0f,0.0f });
+	floor->SetRotation({ 90.0f,0.0f,0.0f });
+	floor->SetScale({ 5.0f,5.0f,5.0f });
+	floor->Update();
 	billboard3d = Object3d::Create();
 	billboard3d->SetPosition({ -2.0f,0.0f,0.0f });
 	billboard3d->Update();
@@ -48,27 +64,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	Sprite::LoadTexture(2, L"Resources/texture.png");
 	sprite1 = Sprite::Create(2, { 0,0 });
 	sprite2 = Sprite::Create(2, { 500,500 }, { 1,0,0,1 }, { 0,0 }, false, true);
-
-	//for (int i = 0; i < 100; i++)
-	//{
-	//	const float rnd_pos = 10.0f;
-	//	XMFLOAT3 pos{};
-	//	pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-	//	pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-	//	pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-
-	//	const float rnd_vel = 0.1f;
-	//	XMFLOAT3 vel{};
-	//	vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-	//	vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-	//	vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-
-	//	const float rnd_acc = 0.001f;
-	//	XMFLOAT3 acc{};
-	//	acc.y = -(float)rand() / RAND_MAX * rnd_acc;
-
-	//	particleMan->Add(60, pos, vel, acc, 1.0f, 0.0f);
-	//}
 }
 
 void GameScene::Update()
@@ -82,25 +77,47 @@ void GameScene::Update()
 	else if (input->PushKey(DIK_3)) {
 		mord = EmitterMord;
 	}
+	else if (input->PushKey(DIK_4)) {
+		mord = GrassMord;
+	}
 
+	switch (mord)
+	{
+	case GrassMord:
+		if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
+		{
+			if (input->PushKey(DIK_W)) { GrassObj::CameraMoveVector({ 0.0f,+1.0f,0.0f }); }
+			else if (input->PushKey(DIK_S)) { GrassObj::CameraMoveVector({ 0.0f,-1.0f,0.0f }); }
+			if (input->PushKey(DIK_D)) { GrassObj::CameraMoveVector({ +1.0f,0.0f,0.0f }); }
+			else if (input->PushKey(DIK_A)) { GrassObj::CameraMoveVector({ -1.0f,0.0f,0.0f }); }
+		}
+	case Billboard:
+		if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
+		{
+			if (input->PushKey(DIK_W)) { Object3d::CameraMoveVector({ 0.0f,+1.0f,0.0f }); }
+			else if (input->PushKey(DIK_S)) { Object3d::CameraMoveVector({ 0.0f,-1.0f,0.0f }); }
+			if (input->PushKey(DIK_D)) { Object3d::CameraMoveVector({ +1.0f,0.0f,0.0f }); }
+			else if (input->PushKey(DIK_A)) { Object3d::CameraMoveVector({ -1.0f,0.0f,0.0f }); }
+		}
+		break;
+	case ChangeScaleParticle:
+	case EmitterMord:
+		if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
+		{
+			if (input->PushKey(DIK_W)) { ParticleManager::CameraMoveVector({ 0.0f,+1.0f,0.0f }); }
+			else if (input->PushKey(DIK_S)) { ParticleManager::CameraMoveVector({ 0.0f,-1.0f,0.0f }); }
+			if (input->PushKey(DIK_D)) { ParticleManager::CameraMoveVector({ +1.0f,0.0f,0.0f }); }
+			else if (input->PushKey(DIK_A)) { ParticleManager::CameraMoveVector({ -1.0f,0.0f,0.0f }); }
+		}
+		break;
+	default:
+		break;
+	}
 
 
 	// カメラ移動
-	if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
-	{
-		if (input->PushKey(DIK_W)) { ParticleManager::CameraMoveVector({ 0.0f,+1.0f,0.0f }); }
-		else if (input->PushKey(DIK_S)) { ParticleManager::CameraMoveVector({ 0.0f,-1.0f,0.0f }); }
-		if (input->PushKey(DIK_D)) { ParticleManager::CameraMoveVector({ +1.0f,0.0f,0.0f }); }
-		else if (input->PushKey(DIK_A)) { ParticleManager::CameraMoveVector({ -1.0f,0.0f,0.0f }); }
-	}
-	if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
-	{
-		if (input->PushKey(DIK_W)) { Object3d::CameraMoveVector({ 0.0f,+1.0f,0.0f }); }
-		else if (input->PushKey(DIK_S)) { Object3d::CameraMoveVector({ 0.0f,-1.0f,0.0f }); }
-		if (input->PushKey(DIK_D)) { Object3d::CameraMoveVector({ +1.0f,0.0f,0.0f }); }
-		else if (input->PushKey(DIK_A)) { Object3d::CameraMoveVector({ -1.0f,0.0f,0.0f }); }
-	}
 	if (input->TriggerKey(DIK_R)) {
+		GrassObj::ResetCamera();
 		Object3d::ResetCamera();
 		ParticleManager::ResetCamera();
 	}
@@ -226,9 +243,18 @@ void GameScene::Update()
 			particleMan->Add(120, pos, vel, acc, 1.0f, 0.0f, { 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,0.0f });
 		}
 		break;
+	case GrassMord:
+		floor->Update();
+
+		for (int i = 0; i < grass3d.size(); i++)
+		{
+			grass3d[i]->Update();
+		}
+		break;
 	default:
 		break;
 	}
+
 	particleMan->Update();
 }
 
@@ -241,7 +267,7 @@ void GameScene::Draw()
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
 	// 背景スプライト描画
-	spriteBG->Draw();
+	//spriteBG->Draw();
 
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
@@ -255,6 +281,31 @@ void GameScene::Draw()
 
 #pragma region 3Dオブジェクト描画
 	// 3Dオブジェクト描画前処理
+	GrassObj::PreDraw(cmdList);
+
+	// 3Dオブクジェクトの描画
+
+	switch (mord)
+	{
+	case Billboard:
+		break;
+	case ChangeScaleParticle:
+		break;
+	case GrassMord:
+		for (int i = 0; i < grass3d.size(); i++)
+		{
+			grass3d[i]->Draw();
+		}
+		break;
+	default:
+		break;
+	}
+
+	/// <summary>
+	/// ここに3Dオブジェクトの描画処理を追加できる
+	/// </summary>
+	GrassObj::PostDraw();
+	// 3Dオブジェクト描画前処理
 	Object3d::PreDraw(cmdList);
 
 	// 3Dオブクジェクトの描画
@@ -266,6 +317,9 @@ void GameScene::Draw()
 		object3d->Draw();
 		break;
 	case ChangeScaleParticle:
+		break;
+	case GrassMord:
+		floor->Draw();
 		break;
 	default:
 		break;

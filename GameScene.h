@@ -8,6 +8,7 @@
 #include "DebugText.h"
 #include "Object3d.h"
 #include "ParticleEmitter.h"
+#include "GrassObj.h"
 
 /// <summary>
 /// ゲームシーン
@@ -63,6 +64,8 @@ private: // メンバ変数
 	/// </summary>
 	Sprite* spriteBG = nullptr;
 	ParticleManager* particleMan = nullptr;
+	std::vector<GrassObj*> grass3d;
+	Object3d* floor = nullptr;
 	Object3d* object3d = nullptr;
 	Object3d* billboard3d = nullptr;
 	ParticleEmitter afterEffect;
@@ -77,6 +80,7 @@ private: // メンバ変数
 		Billboard,
 		ChangeScaleParticle,
 		EmitterMord,
+		GrassMord,
 	};
 	int mord = Billboard;
 };
