@@ -9,6 +9,7 @@
 #include "Object3d.h"
 #include "ParticleEmitter.h"
 #include "GrassObj.h"
+#include "RainObj.h"
 
 /// <summary>
 /// ゲームシーン
@@ -68,6 +69,7 @@ private: // メンバ変数
 	Object3d* floor = nullptr;
 	Object3d* object3d = nullptr;
 	Object3d* billboard3d = nullptr;
+	RainManager* rainMan = nullptr;
 	ParticleEmitter afterEffect;
 	ParticleEmitter afterEffect2;
 
@@ -81,6 +83,7 @@ private: // メンバ変数
 		ChangeScaleParticle,
 		EmitterMord,
 		GrassMord,
+		RainMord,
 	};
 	int mord = Billboard;
 };

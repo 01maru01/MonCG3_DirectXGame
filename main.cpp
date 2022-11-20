@@ -31,6 +31,7 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int)
 	GrassObj::StaticInitialize(dxCommon->GetDevice(), WinApp::kWindowWidth, WinApp::kWindowHeight);
 	Object3d::StaticInitialize(dxCommon->GetDevice(), WinApp::kWindowWidth, WinApp::kWindowHeight);
 	ParticleManager::StaticInitialize(dxCommon->GetDevice(), WinApp::kWindowWidth, WinApp::kWindowHeight);
+	RainManager::StaticInitialize(dxCommon->GetDevice(), WinApp::kWindowWidth, WinApp::kWindowHeight);
 #pragma endregion
 
 	// ゲームシーンの初期化

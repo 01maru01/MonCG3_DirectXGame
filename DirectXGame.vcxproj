@@ -95,9 +95,11 @@
     <ClCompile Include="GrassObj.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MyMath.cpp" />
     <ClCompile Include="Object3d.cpp" />
     <ClCompile Include="ParticleEmitter.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
+    <ClCompile Include="RainObj.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="WinApp.cpp" />
   </ItemGroup>
@@ -142,6 +144,12 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">main</EntryPointName>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\RainGeometryShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Resources\shaders\SpritePixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -176,9 +184,11 @@
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GrassObj.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="MyMath.h" />
     <ClInclude Include="Object3d.h" />
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="ParticleManager.h" />
+    <ClInclude Include="RainObj.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="WinApp.h" />
   </ItemGroup>

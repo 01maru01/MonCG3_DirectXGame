@@ -13,6 +13,7 @@ GameScene::~GameScene()
 	delete object3d;
 	delete floor;
 	delete billboard3d;
+	delete rainMan;
 	delete particleMan;
 	delete sprite1;
 	delete sprite2;
@@ -61,6 +62,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	billboard3d->Update();
 	particleMan = ParticleManager::Create();
 	particleMan->Update();
+	rainMan = RainManager::Create();
+	rainMan->Update();
 	Sprite::LoadTexture(2, L"Resources/texture.png");
 	sprite1 = Sprite::Create(2, { 0,0 });
 	sprite2 = Sprite::Create(2, { 500,500 }, { 1,0,0,1 }, { 0,0 }, false, true);
@@ -82,6 +85,9 @@ void GameScene::Update()
 	}
 	else if (input->PushKey(DIK_4)) {
 		mord = GrassMord;
+	}
+	else if (input->PushKey(DIK_5)) {
+		mord = RainMord;
 	}
 
 	switch (mord)
@@ -113,6 +119,15 @@ void GameScene::Update()
 			else if (input->PushKey(DIK_A)) { ParticleManager::CameraMoveVector({ -1.0f,0.0f,0.0f }); }
 		}
 		break;
+	case RainMord:
+		if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
+		{
+			if (input->PushKey(DIK_W)) { RainManager::CameraMoveVector({ 0.0f,+1.0f,0.0f }); }
+			else if (input->PushKey(DIK_S)) { RainManager::CameraMoveVector({ 0.0f,-1.0f,0.0f }); }
+			if (input->PushKey(DIK_D)) { RainManager::CameraMoveVector({ +1.0f,0.0f,0.0f }); }
+			else if (input->PushKey(DIK_A)) { RainManager::CameraMoveVector({ -1.0f,0.0f,0.0f }); }
+		}
+		break;
 	default:
 		break;
 	}
@@ -123,6 +138,7 @@ void GameScene::Update()
 		GrassObj::ResetCamera();
 		Object3d::ResetCamera();
 		ParticleManager::ResetCamera();
+		RainManager::ResetCamera();
 	}
 
 	if (input->PushKey(DIK_SPACE)) {
@@ -230,10 +246,49 @@ void GameScene::Update()
 			grass3d[i]->Update();
 		}
 		break;
+	case RainMord:
+		for (int i = 0; i < 5; i++)
+		{
+			const float rnd_pos = 10.0f;
+			XMFLOAT3 pos{};
+			pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+			pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+			pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+			const float rnd_vel = 0.1f;
+			XMFLOAT3 vel{};
+			//vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			vel.y = -(float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+			//vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+
+			const float rnd_acc = 0.001f;
+			XMFLOAT3 acc{};
+			acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+			XMFLOAT4 s_color{};
+			s_color.x = (float)rand() / RAND_MAX;
+			s_color.y = (float)rand() / RAND_MAX;
+			s_color.z = (float)rand() / RAND_MAX;
+			s_color.x = 1.0f;
+			s_color.y = 1.0f;
+			s_color.z = 1.0f;
+			s_color.w = 1.0f;
+			XMFLOAT4 e_color{};
+			e_color.x = (float)rand() / RAND_MAX;
+			e_color.y = (float)rand() / RAND_MAX;
+			e_color.z = (float)rand() / RAND_MAX;
+			e_color.x = 1.0f;
+			e_color.y = 1.0f;
+			e_color.z = 1.0f;
+			e_color.w = 1.0f;
+
+			rainMan->Add(60, pos, vel, acc, 5.0f, 5.0f, s_color, e_color);
+		}
+		break;
 	default:
 		break;
 	}
-
+	rainMan->Update();
 	particleMan->Update();
 }
 
@@ -308,6 +363,20 @@ void GameScene::Draw()
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	Object3d::PostDraw();
+
+
+	RainManager::PreDraw(cmdList);
+
+	/// <summary>
+	/// ここに3Dオブジェクトの描画処理を追加できる
+	/// </summary>
+
+	// 3Dオブジェクト描画後処理
+
+	rainMan->Draw();
+
+	// 3Dオブジェクト描画後処理
+	RainManager::PostDraw();
 
 	ParticleManager::PreDraw(cmdList);
 
