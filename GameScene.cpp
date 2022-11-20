@@ -64,6 +64,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	Sprite::LoadTexture(2, L"Resources/texture.png");
 	sprite1 = Sprite::Create(2, { 0,0 });
 	sprite2 = Sprite::Create(2, { 500,500 }, { 1,0,0,1 }, { 0,0 }, false, true);
+
+	afterEffect.SetPosition({ 10.0f,0.0f,50.0f });
+	afterEffect2.SetPosition({ -10.0f,0.0f,50.0f });
 }
 
 void GameScene::Update()
@@ -176,7 +179,7 @@ void GameScene::Update()
 		{
 			if (moveFire) {
 				// 現在の座標を取得
-				XMFLOAT3 position = fireEffect.GetPosition();
+				XMFLOAT3 position = afterEffect2.GetPosition();
 
 				float spd = 0.5f;
 				// 移動後の座標を計算
@@ -186,7 +189,7 @@ void GameScene::Update()
 				else if (input->PushKey(DIK_LEFT)) { position.x -= spd; }
 
 				// 座標の変更を反映
-				fireEffect.SetPosition(position);
+				afterEffect2.SetPosition(position);
 			}
 			else {
 				// 現在の座標を取得
@@ -207,40 +210,16 @@ void GameScene::Update()
 		for (int i = 0; i < 5; i++)
 		{
 			afterEffect.Update();
-
-			particleMan->Add(120, afterEffect.position, afterEffect.velocity, afterEffect.accel, 0.0f, 2.0f, afterEffect.s_color, afterEffect.e_color);
+			afterEffect.SetScale(0.0f, 2.0f);
+			particleMan->Add(120, afterEffect.position, afterEffect.velocity, afterEffect.accel, afterEffect.s_scale, afterEffect.e_scale, afterEffect.s_color, afterEffect.e_color);
 		}
 
 		for (int i = 0; i < 5; i++)
 		{
-			const float rnd_pos = 2.0f;
-			XMFLOAT3 pos = fireEffect.GetPosition();
-			pos.x += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-			pos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-			pos.z += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-
-			const float rnd_vel = 0.1f;
-			XMFLOAT3 vel{};
-			vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-			vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-			vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-
-			const float rnd_acc = 0.001f;
-			XMFLOAT3 acc{};
-			acc.y = -(float)rand() / RAND_MAX * rnd_acc;
-
-			XMFLOAT4 s_color{};
-			s_color.x = (float)rand() / RAND_MAX;
-			s_color.y = (float)rand() / RAND_MAX;
-			s_color.z = (float)rand() / RAND_MAX;
-			s_color.w = 1.0f;
-			XMFLOAT4 e_color{};
-			e_color.x = (float)rand() / RAND_MAX;
-			e_color.y = (float)rand() / RAND_MAX;
-			e_color.z = (float)rand() / RAND_MAX;
-			e_color.w = 0.0f;
-
-			particleMan->Add(120, pos, vel, acc, 1.0f, 0.0f, { 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,0.0f });
+			afterEffect2.Update();
+			afterEffect2.SetColor(false);
+			afterEffect2.SetScale(1.0f, 0.0f);
+			particleMan->Add(120, afterEffect2.position, afterEffect2.velocity, afterEffect2.accel, afterEffect2.s_scale, afterEffect2.e_scale, afterEffect2.s_color, afterEffect2.e_color);
 		}
 		break;
 	case GrassMord:
